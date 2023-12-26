@@ -1,0 +1,23 @@
+{
+  "name": "api-types",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf ./dist tsconfig.buildinfo",
+    "lint": "eslint --ext .ts src"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.26.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "main": "dist/index.js",
+  "exports": {
+    "./*": "./dist/index.js",
+    "./structures": "./dist/structures.js",
+    "./util": "./dist/util.js",
+    "./routes": "./dist/routes/index.js"
+  },
+  "type": "module"
+}

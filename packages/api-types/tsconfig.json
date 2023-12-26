@@ -1,0 +1,27 @@
+{
+  "ts-node": {
+    "files": true
+  },
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "strict": true,
+    "target": "esnext",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "typeRoots": [
+      "./@types"
+    ]
+  },
+  "include": [
+    "src",
+    "tests"
+  ],
+  "exclude": [
+    "dist"
+  ]
+}

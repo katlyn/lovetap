@@ -1,0 +1,29 @@
+{
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build",
+        "clean",
+        "generate"
+      ],
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/build",
+        "{projectRoot}/public/build"
+      ]
+    },
+    "dev": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "^build"
+      ]
+    }
+  },
+  "affected": {
+    "defaultBase": "master"
+  }
+}

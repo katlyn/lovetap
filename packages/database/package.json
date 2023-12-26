@@ -1,0 +1,22 @@
+{
+  "name": "database",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf ./dist tsconfig.buildinfo",
+    "generate": "prisma generate",
+    "dev": "prisma studio --browser none"
+  },
+  "devDependencies": {
+    "@tsconfig/node-lts": "^20.1.0",
+    "@types/node": "^20.10.5",
+    "prisma": "^5.7.1",
+    "typescript": "^5.3.3"
+  },
+  "type": "module",
+  "dependencies": {
+    "@prisma/client": "5.7.1"
+  }
+}

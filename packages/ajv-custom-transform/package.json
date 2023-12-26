@@ -1,0 +1,17 @@
+{
+  "name": "ajv-custom-transform",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf ./dist tsconfig.buildinfo",
+    "lint": "eslint --ext .ts src"
+  },
+  "devDependencies": {
+    "ajv": "^8.12.0",
+    "typescript": "^5.3.3"
+  },
+  "types": "src/index.ts",
+  "packageManager": "pnpm@8.6.7",
+  "type": "module"
+}

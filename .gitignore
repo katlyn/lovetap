@@ -1,0 +1,6 @@
+.idea
+/.nx/
+**/node_modules
+**/.env
+**/dist
+**/dev.db*

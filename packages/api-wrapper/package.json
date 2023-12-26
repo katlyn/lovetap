@@ -1,0 +1,23 @@
+{
+  "name": "api-wrapper",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf ./dist tsconfig.buildinfo",
+    "lint": "eslint --ext .ts src"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.26.8",
+    "ajv": "^8.12.0",
+    "ajv-custom-transform": "workspace:^",
+    "ajv-formats": "^2.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "exports": {
+    "./*": "./dist"
+  },
+  "type": "module"
+}
