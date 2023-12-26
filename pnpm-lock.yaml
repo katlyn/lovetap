@@ -94,6 +94,9 @@ importers:
       ajv-formats:
         specifier: ^2.1.1
         version: 2.1.1(ajv@8.12.0)
+      api-types:
+        specifier: workspace:^
+        version: link:../api-types
     devDependencies:
       typescript:
         specifier: ^5.3.3

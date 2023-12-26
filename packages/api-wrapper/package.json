@@ -11,7 +11,8 @@
     "@sinclair/typebox": "^0.26.8",
     "ajv": "^8.12.0",
     "ajv-custom-transform": "workspace:^",
-    "ajv-formats": "^2.1.1"
+    "ajv-formats": "^2.1.1",
+    "api-types": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.3.3"

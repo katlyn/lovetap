@@ -27,7 +27,7 @@ const ajv = addFormats(new Ajv({}), [
 
 ajv.addKeyword(customTransformKeyword)
 
-export default abstract class RequestCollection {
+export default abstract class EndpointCollection {
   readonly apiRoot: string
 
   constructor (apiRoot: string) {

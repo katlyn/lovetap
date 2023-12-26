@@ -1,5 +1,6 @@
 import {AuthenticationHeader, UUIDParam} from "../util.js";
 import structures from "../structures.js";
+import {Type} from "@sinclair/typebox";
 
 export default {
   POST: {
@@ -27,7 +28,7 @@ export default {
       params: UUIDParam,
       headers: AuthenticationHeader,
       response: {
-        "204": null
+        "204": Type.Null()
       }
     },
     "/messages": {
