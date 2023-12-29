@@ -3,17 +3,17 @@ import routeSchema from "api-types/routes"
 
 import EndpointCollection from "./EndpointCollection.js"
 
-export default class DesignationCollection extends EndpointCollection {
+export default class ReceiverCollection extends EndpointCollection {
   constructor(apiRoot: string) {
-    super(new URL("designations/", apiRoot).toString())
+    super(new URL("receivers/", apiRoot).toString())
   }
 
   createReceiver (data: Static<typeof routeSchema.receivers.POST.body>) {
-    return this.post("/", data, routeSchema.receivers.POST.response["201"])
+    return this.post("", data, routeSchema.receivers.POST.response["201"])
   }
 
   getReceiver (id: string) {
-    return this.get(`/${id}`, routeSchema.receivers[":id"].GET.response["200"])
+    return this.get(`${id}`, routeSchema.receivers[":id"].GET.response["200"])
   }
 
   updateReceiver (id: string, data: Static<typeof routeSchema.receivers[":id"]["PATCH"]["body"]>) {
@@ -21,6 +21,6 @@ export default class DesignationCollection extends EndpointCollection {
   }
 
   deleteReceiver (id: string) {
-    return this.delete(`/${id}`, routeSchema.receivers[":id"].DELETE.response["204"])
+    return this.delete(`${id}`, routeSchema.receivers[":id"].DELETE.response["204"])
   }
 }
