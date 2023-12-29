@@ -2,7 +2,7 @@ import { FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox"
 import routeSchema from "api-types/routes"
 import ReceiverService from "./ReceiverService.js";
 import prisma from "../../config/prisma.js";
-import {NotFound} from "http-errors";
+import httpErrors from "http-errors";
 import * as repl from "repl";
 
 const routes: FastifyPluginAsyncTypebox = async function (fastify): Promise<void> {
@@ -14,7 +14,7 @@ const routes: FastifyPluginAsyncTypebox = async function (fastify): Promise<void
   fastify.get("/:id", { schema: routeSchema.receivers[":id"].GET }, async request => {
     const receiver = await prisma.receiver.findUnique({ where: request.params });
     if (receiver === null) {
-      throw new NotFound(`Receiver ${request.id} not found`)
+      throw new httpErrors.NotFound(`Receiver ${request.id} not found`)
     }
     return receiver
   })

@@ -6,19 +6,31 @@ export const defaults: Record<string, string> = {
   HTTP_HOST: "0.0.0.0",
   HTTP_PORT: "8080",
   HTTP_TRUST_PROXY: "false",
-  NODE_ENV: "development",
-  DATABASE_PATH: "/data/lovetap.db"
+  NODE_ENV: "development"
 }
 
 export const config = {
   environment: "NODE_ENV",
   database: {
-    path: "DATABASE_PATH"
+    url: "DATABASE_URL"
   },
   http: {
+    corsUrl: "HTTP_CORS_URL",
     host: "HTTP_HOST",
     port: transform("HTTP_PORT", Number),
-    proxyTrust: "HTTP_TRUST_PROXY"
+    trustProxy: transform("HTTP_TRUST_PROXY", v => {
+      if (v.toLowerCase() === "true") {
+        return true
+      }
+      const parsed = Number(v)
+      if (!isNaN(parsed)) {
+        return parsed
+      }
+      if (v.includes(".") || v.includes(":")) {
+        return v.split(",").map(s => s.trim())
+      }
+      return false
+    })
   },
   vapid: {
     subject: "VAPID_SUBJECT",

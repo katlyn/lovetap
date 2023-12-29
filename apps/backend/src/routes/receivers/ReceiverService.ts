@@ -1,6 +1,6 @@
 import prisma from "../../config/prisma.js";
 import * as crypto from "node:crypto"
-import {InternalServerError} from "http-errors";
+import httpErrors from "http-errors";
 import {NotificationT} from "api-types/structures";
 import {sendNotification} from "../../config/webPush.js";
 
@@ -44,12 +44,12 @@ export default class ReceiverService {
     }).subscriptions({ include: { keys: true } });
 
     if (subscriptions === null) {
-      throw new InternalServerError(`unable to fetch PushSubscriptions for ${receiverId}`)
+      throw new httpErrors.InternalServerError(`unable to fetch PushSubscriptions for ${receiverId}`)
     }
 
     return subscriptions.map(subscription => {
       if (subscription.keys === null) {
-        throw new InternalServerError(`invalid PushSubscription for ${receiverId}: ${subscription.id} has no keys`)
+        throw new httpErrors.InternalServerError(`invalid PushSubscription for ${receiverId}: ${subscription.id} has no keys`)
       }
       return {
         // This is kinda silly but typescript requires it to be done this way

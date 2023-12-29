@@ -2,7 +2,10 @@ import buildServer from "./server.js"
 
 import env from "./config/env.js"
 
-const server = await buildServer()
+const server = await buildServer({
+  logger: { level: "info" },
+  trustProxy: env.http.trustProxy
+})
 
 server.listen({
   host: env.http.host,
