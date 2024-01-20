@@ -4,18 +4,22 @@ import { RouterLink, RouterView } from "vue-router"
 </script>
 
 <template>
-  <header>
-    <h1>
-      Lovetap
-    </h1>
+  <div class="max-w-sm mx-auto p-8">
+    <header class="flex items-baseline justify-between w-full">
+      <h1>
+        Lovetap
+      </h1>
 
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
+      <div class="wrapper">
+        <nav class="flex gap-2">
+          <RouterLink to="/">Home</RouterLink>
+          <RouterLink to="/about">About</RouterLink>
+        </nav>
+      </div>
+    </header>
 
-  <RouterView />
+    <hr class="mb-4">
+
+    <RouterView />
+  </div>
 </template>
