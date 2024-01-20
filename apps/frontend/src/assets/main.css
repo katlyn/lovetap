@@ -14,9 +14,36 @@ h3 {
     @apply text-2xl
 }
 
+h1, h2, h3 {
+    margin-bottom: 0.5em;
+}
+
 a {
     @apply text-violet-600 underline
 }
 .router-link-active {
     @apply text-violet-600 underline font-bold decoration-2
+}
+
+p {
+    @apply mb-4
+}
+
+dt {
+    @apply font-bold
+}
+dd {
+    @apply mb-3.5
+}
+
+details {
+    @apply mb-3.5 text-gray-600
+}
+
+summary {
+    @apply text-black
+}
+
+ul {
+    @apply list-disc ml-8
 }
