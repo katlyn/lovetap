@@ -22,7 +22,7 @@ a {
     @apply text-violet-600 underline
 }
 .router-link-active {
-    @apply text-violet-600 underline font-bold decoration-2
+    @apply underline decoration-2
 }
 
 p {
@@ -37,11 +37,10 @@ dd {
 }
 
 details {
-    @apply mb-3.5 text-gray-600
+    @apply mb-3.5 text-gray-600 ml-4
 }
-
 summary {
-    @apply text-black
+    @apply text-black -ml-4
 }
 
 ul {
