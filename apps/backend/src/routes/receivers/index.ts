@@ -67,8 +67,8 @@ const routes: FastifyPluginAsyncTypebox = async function (fastify): Promise<void
     if (!ReceiverService.verifySecret(request.headers.authorization, receiver.secretSalt, receiver.pushSecretHash)) {
       throw new httpErrors.Unauthorized()
     }
-    reply.status(201)
-    return ReceiverService.sendMessage(request.params.id, request.body.from, request.body.content)
+    await ReceiverService.sendMessage(request.params.id, request.body.from, request.body.content)
+    reply.status(204)
   })
 }
 

@@ -79,25 +79,28 @@ export default class ReceiverService {
   }
 
   static async sendMessage (receiverId: string, from: string, content?: string) {
-    const message = await prisma.pushMessage.create({
-      data: {
-        receiverId,
-        from,
-        content
-      },
-      include: {
-        receiver: true
-      }
-    })
+    // const message = await prisma.pushMessage.create({
+    //   data: {
+    //     receiverId,
+    //     from,
+    //     content
+    //   },
+    //   include: {
+    //     receiver: true
+    //   }
+    // })
+
+    const receiver = await prisma.receiver.findUnique({ where: { id: receiverId }})
+    if (!receiver) {
+      throw new Error("Unable to find receiver")
+    }
 
     await ReceiverService.notifyReceiver(receiverId, {
-      title: `[${message.receiver.name}] ${from} thought of you`,
+      title: `[${receiver.name}] ${from} thought of you`,
       options: {
         body: content
       }
     })
-
-    return message
   }
 
   static verifySecret (secret: string, salt: string, targetHash: string): boolean {

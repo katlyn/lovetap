@@ -47,7 +47,7 @@ export default {
         headers: AuthenticationHeader,
         body: structures.PushMessageCreate,
         response: {
-          "201": structures.PushMessage
+          "204": Type.Null()
         }
       }
     }
