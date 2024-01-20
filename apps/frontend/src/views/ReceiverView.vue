@@ -23,6 +23,11 @@ onMounted(async () => {
     }))
   } catch (err: any) {
     error.value = err.message ?? err.toString()
+    if (err.statusCode === 404) {
+      localStorage.removeItem(`receiver-keys:${props.id}`)
+      localStorage.removeItem(`receiver-from:${props.id}`)
+      await router.push("/")
+    }
   }
 })
 
@@ -63,57 +68,59 @@ function copyTransfer () {
       Unable to load receiver: {{ error }}.
     </div>
     <div v-else-if="receiver !== null">
-      <FormKit
-        type="form"
-        v-if="keys.pushSecret"
-        @submit="poke"
-        :actions="false"
-        :value="{ from: previousName }"
-      >
-        <h3>Send notification</h3>
-        <div>
+      <template v-if="keys.pushSecret">
+        <FormKit
+          type="form"
+          @submit="poke"
+          :actions="false"
+          :value="{ from: previousName }"
+        >
+          <h3>Send notification</h3>
+          <div>
+            <FormKit
+              type="text"
+              name="from"
+              placeholder="Taps will be displayed as from this name"
+              validation="required"
+            />
+            <FormKit
+              type="submit"
+              label="Send tap!"
+            />
+          </div>
+        </FormKit>
+        <FormKit
+          type="button"
+          label="Copy invite code"
+          @click="copyInvite"
+        />
+      </template>
+      <template v-if="keys.editSecret">
+        <FormKit
+          type="form"
+          submit-label="Save"
+          @submit="updateName"
+          :value="{ name: receiver!.name }"
+        >
+          <h3>Update receiver</h3>
           <FormKit
             type="text"
-            name="from"
-            placeholder="Taps will be displayed as from this name"
+            label="Name"
             validation="required"
+            name="name"
           />
-          <FormKit
-            type="submit"
-            label="Send tap!"
-          />
-        </div>
-      </FormKit>
-      <FormKit
-        type="form"
-        v-if="keys.editSecret"
-        submit-label="Save"
-        @submit="updateName"
-        :value="{ name: receiver!.name }"
-      >
-        <h3>Update receiver</h3>
+        </FormKit>
         <FormKit
-          type="text"
-          label="Name"
-          validation="required"
-          name="name"
+          type="button"
+          label="Delete receiver"
+          @click="deleteReceiver"
         />
-      </FormKit>
-      <FormKit
-        type="button"
-        label="Delete receiver"
-        @click="deleteReceiver"
-      />
-      <FormKit
-        type="button"
-        label="Copy invite code"
-        @click="copyInvite"
-      />
-      <FormKit
-        type="button"
-        label="Copy transfer code"
-        @click="copyTransfer"
-      />
+        <FormKit
+          type="button"
+          label="Copy transfer code"
+          @click="copyTransfer"
+        />
+      </template>
     </div>
   </main>
 </template>
