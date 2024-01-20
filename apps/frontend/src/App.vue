@@ -5,7 +5,7 @@ import { RouterLink, RouterView } from "vue-router"
 
 <template>
   <header>
-    <h1 class="text-3xl font-bold">
+    <h1>
       Lovetap
     </h1>
 

@@ -14,7 +14,7 @@ const routes: FastifyPluginAsyncTypebox = async function (fastify): Promise<void
   fastify.get("/:id", { schema: routeSchema.receivers[":id"].GET }, async request => {
     const receiver = await prisma.receiver.findUnique({ where: request.params });
     if (receiver === null) {
-      throw new httpErrors.NotFound(`Receiver ${request.id} not found`)
+      throw new httpErrors.NotFound(`Receiver ${request.params.id} not found`)
     }
     return receiver
   })
@@ -31,6 +31,11 @@ const routes: FastifyPluginAsyncTypebox = async function (fastify): Promise<void
     await prisma.receiver.delete({ where: request.params })
     reply.status(204)
     return null
+  })
+
+  fastify.post("/:id/subscriptions", { schema: routeSchema.receivers[":id"]["/subscriptions"].POST }, async (request, reply) => {
+    reply.status(204)
+    await ReceiverService.addPushSubscription(request.params.id, request.body)
   })
 
   fastify.post("/:id/messages", { schema: routeSchema.receivers[":id"]["/messages"].POST }, async (request, reply) => {

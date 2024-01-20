@@ -1,9 +1,119 @@
 <script setup lang="ts">
-defineProps<{
+import type { ReceiverT } from "api-types/structures"
+import { onMounted, ref } from "vue"
+
+import api from "@/config/api"
+import router from "@/router"
+
+const props = defineProps<{
   id: string
 }>()
+
+const receiver = ref<ReceiverT|null>(null)
+const keys = ref<{ pushSecret?: string, editSecret?: string }>(JSON.parse(localStorage.getItem(`receiver-keys:${props.id}`) ?? "{}"))
+const previousName = ref<string|null>(localStorage.getItem(`receiver-from:${props.id}`))
+const error = ref<string|null>(null)
+
+onMounted(async () => {
+  try {
+    receiver.value = await api.receiver.getReceiver(props.id)
+    localStorage.setItem(`receiver-keys:${props.id}`, JSON.stringify({
+      ...keys.value,
+      ...receiver.value
+    }))
+  } catch (err: any) {
+    error.value = err.message ?? err.toString()
+  }
+})
+
+async function poke ({ from }: { from: string }) {
+  localStorage.setItem(`receiver-from:${props.id}`, from)
+  await api.receiver.sendMessage(props.id, keys.value.pushSecret!, { from })
+}
+
+async function updateName ({ name }: { name: string }) {
+  const response = await api.receiver.updateReceiver(props.id, keys.value.editSecret!, { name })
+  localStorage.setItem(`receiver-keys:${props.id}`, JSON.stringify({
+    ...keys.value,
+    ...response
+  }))
+  receiver.value = response
+}
+
+async function deleteReceiver () {
+  await api.receiver.deleteReceiver(props.id, keys.value.editSecret!)
+  localStorage.removeItem(`receiver-keys:${props.id}`)
+  localStorage.removeItem(`receiver-from:${props.id}`)
+  await router.push("/")
+}
+
+function copyInvite () {
+  navigator.clipboard.writeText(`inv:${props.id}:${keys.value.pushSecret}`)
+}
+
+function copyTransfer () {
+  navigator.clipboard.writeText(`trans:${props.id}:${keys.value.pushSecret}:${keys.value.editSecret}`)
+}
 </script>
 
 <template>
-  <p>{{ id }}</p>
+  <main>
+    <h2>{{ receiver?.name ?? id }}</h2>
+    <div v-if="error" class="border-red-500 border bg-red-100 rounded mb-4 p-2">
+      Unable to load receiver: {{ error }}.
+    </div>
+    <div v-else-if="receiver !== null">
+      <FormKit
+        type="form"
+        v-if="keys.pushSecret"
+        @submit="poke"
+        :actions="false"
+        :value="{ from: previousName }"
+      >
+        <h3>Send notification</h3>
+        <div>
+          <FormKit
+            type="text"
+            name="from"
+            placeholder="Taps will be displayed as from this name"
+            validation="required"
+          />
+          <FormKit
+            type="submit"
+            label="Send tap!"
+          />
+        </div>
+      </FormKit>
+      <FormKit
+        type="form"
+        v-if="keys.editSecret"
+        submit-label="Save"
+        @submit="updateName"
+        :value="{ name: receiver!.name }"
+      >
+        <h3>Update receiver</h3>
+        <FormKit
+          type="text"
+          label="Name"
+          validation="required"
+          name="name"
+        />
+      </FormKit>
+      <FormKit
+        type="button"
+        label="Delete receiver"
+        @click="deleteReceiver"
+      />
+      <FormKit
+        type="button"
+        label="Copy invite code"
+        @click="copyInvite"
+      />
+      <FormKit
+        type="button"
+        label="Copy transfer code"
+        @click="copyTransfer"
+      />
+    </div>
+  </main>
 </template>

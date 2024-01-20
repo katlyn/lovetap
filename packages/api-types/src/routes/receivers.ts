@@ -31,6 +31,15 @@ export default {
         "204": Type.Null()
       }
     },
+    "/subscriptions": {
+      POST: {
+        params: UUIDParam,
+        body: structures.PushSubscription,
+        response: {
+          "204": Type.Null()
+        }
+      }
+    },
     "/messages": {
       POST: {
         params: UUIDParam,

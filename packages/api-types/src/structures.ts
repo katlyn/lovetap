@@ -47,6 +47,16 @@ const Notification = Type.Object({
   options: Type.Optional(NotificationOptions)
 })
 
+export type PushSubscriptionT = Static<typeof PushSubscription>
+const PushSubscription = Type.Object({
+  endpoint: Type.String(),
+  expirationTime: Nullable(UnsafeDate),
+  keys: Type.Object({
+    p256dh: Type.String(),
+    auth: Type.String()
+  })
+})
+
 
 export default {
   Receiver,
@@ -55,6 +65,7 @@ export default {
   ReceiverWithAuthenticationDetails,
   PushMessage,
   PushMessageCreate,
+  PushSubscription,
   Notification,
   NotificationOptions
 }

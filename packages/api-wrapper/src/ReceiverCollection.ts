@@ -16,11 +16,35 @@ export default class ReceiverCollection extends EndpointCollection {
     return this.get(`${id}`, routeSchema.receivers[":id"].GET.response["200"])
   }
 
-  updateReceiver (id: string, data: Static<typeof routeSchema.receivers[":id"]["PATCH"]["body"]>) {
-    return this.patch(`${id}`, data, routeSchema.receivers[":id"].PATCH.response["200"])
+  updateReceiver (id: string, auth: string, data: Static<typeof routeSchema.receivers[":id"]["PATCH"]["body"]>) {
+    return this.patch(`${id}`, data, routeSchema.receivers[":id"].PATCH.response["200"], {
+      headers: {
+        authorization: `Bearer ${auth}`
+      }
+    })
   }
 
-  deleteReceiver (id: string) {
-    return this.delete(`${id}`, routeSchema.receivers[":id"].DELETE.response["204"])
+  deleteReceiver (id: string, auth: string) {
+    return this.delete(`${id}`, routeSchema.receivers[":id"].DELETE.response["204"], {
+      headers: {
+        authorization: `Bearer ${auth}`
+      }
+    })
+  }
+
+  addSubscription (id: string, auth: string, data: Static<typeof routeSchema.receivers[":id"]["/subscriptions"]["POST"]["body"]>) {
+    return this.post(`${id}/subscriptions`, data, routeSchema.receivers[":id"]["/subscriptions"].POST.response["204"], {
+      headers: {
+        authorization: `Bearer ${auth}`
+      }
+    })
+  }
+
+  sendMessage (id: string, auth: string, data: Static<typeof routeSchema.receivers[":id"]["/messages"]["POST"]["body"]>) {
+    return this.post(`${id}/messages`, data, routeSchema.receivers[":id"]["/messages"].POST.response["201"], {
+      headers: {
+        authorization: `Bearer ${auth}`
+      }
+    })
   }
 }

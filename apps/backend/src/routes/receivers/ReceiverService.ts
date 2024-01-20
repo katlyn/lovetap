@@ -1,7 +1,7 @@
 import prisma from "../../config/prisma.js";
 import * as crypto from "node:crypto"
 import httpErrors from "http-errors";
-import {NotificationT} from "api-types/structures";
+import {NotificationT, PushSubscriptionT} from "api-types/structures";
 import {sendNotification} from "../../config/webPush.js";
 
 function hashSecret (secret: string, salt: string) {
@@ -9,7 +9,7 @@ function hashSecret (secret: string, salt: string) {
 }
 
 function generateSecret (byteLength = 64) {
-  return crypto.randomBytes(byteLength).toString("base64")
+  return crypto.randomBytes(byteLength).toString("hex")
 }
 
 export default class ReceiverService {
@@ -36,6 +36,20 @@ export default class ReceiverService {
       editSecret,
       pushSecret
     }
+  }
+
+  static async addPushSubscription (receiverId: string, subscription: PushSubscriptionT) {
+    return prisma.pushSubscription.create({
+      data: {
+        receiverId,
+        endpoint: subscription.endpoint,
+        // TODO: figure out why these types are weird
+        expirationTime: subscription.expirationTime as Date|null,
+        keys: {
+          create: subscription.keys
+        }
+      }
+    })
   }
 
   static async getPushSubscriptions (receiverId: string) {
@@ -70,11 +84,14 @@ export default class ReceiverService {
         receiverId,
         from,
         content
+      },
+      include: {
+        receiver: true
       }
     })
 
     await ReceiverService.notifyReceiver(receiverId, {
-      title: `${from} thought of you`,
+      title: `[${message.receiver.name}] ${from} thought of you`,
       options: {
         body: content
       }
