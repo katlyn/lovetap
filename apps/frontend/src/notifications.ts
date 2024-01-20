@@ -1,4 +1,4 @@
-import type { PushSubscriptionT } from "api-types/dist/structures"
+import type { PushSubscriptionT } from "api-types/structures"
 
 import api from "@/config/api"
 

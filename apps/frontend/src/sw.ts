@@ -4,7 +4,7 @@ declare const self: ServiceWorkerGlobalScope
 
 import type { NotificationT } from "api-types/structures"
 
-self.addEventListener("push", async event => {
+self.addEventListener("push", event => {
   if (!(event instanceof PushEvent) || event.data === null) {
     return
   }

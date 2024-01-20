@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ReceiverT } from "api-types/dist/structures"
+import type { ReceiverT } from "api-types/structures"
 import { onMounted, ref } from "vue"
 
 import api from "@/config/api"
