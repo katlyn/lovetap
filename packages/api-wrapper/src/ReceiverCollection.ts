@@ -41,7 +41,7 @@ export default class ReceiverCollection extends EndpointCollection {
   }
 
   sendMessage (id: string, auth: string, data: Static<typeof routeSchema.receivers[":id"]["/messages"]["POST"]["body"]>) {
-    return this.post(`${id}/messages`, data, routeSchema.receivers[":id"]["/messages"].POST.response["201"], {
+    return this.post(`${id}/messages`, data, routeSchema.receivers[":id"]["/messages"].POST.response["204"], {
       headers: {
         authorization: `${auth}`
       }
