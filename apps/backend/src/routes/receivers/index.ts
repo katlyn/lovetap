@@ -21,6 +21,13 @@ const routes: FastifyPluginAsyncTypebox = async function (fastify): Promise<void
 
   // TODO: Check authentication details for the below routes!!
   fastify.patch("/:id", { schema: routeSchema.receivers[":id"].PATCH }, async (request, reply) => {
+    const receiver = await prisma.receiver.findUnique({ where: request.params })
+    if (receiver === null) {
+      throw new httpErrors.NotFound()
+    }
+    if (!ReceiverService.verifySecret(request.headers.authorization, receiver.secretSalt, receiver.editSecretHash)) {
+      throw new httpErrors.Unauthorized()
+    }
     return prisma.receiver.update({
       where: request.params,
       data: request.body
@@ -28,17 +35,38 @@ const routes: FastifyPluginAsyncTypebox = async function (fastify): Promise<void
   })
 
   fastify.delete("/:id", { schema: routeSchema.receivers[":id"].DELETE }, async (request, reply) => {
+    const receiver = await prisma.receiver.findUnique({ where: request.params })
+    if (receiver === null) {
+      throw new httpErrors.NotFound()
+    }
+    if (!ReceiverService.verifySecret(request.headers.authorization, receiver.secretSalt, receiver.editSecretHash)) {
+      throw new httpErrors.Unauthorized()
+    }
     await prisma.receiver.delete({ where: request.params })
     reply.status(204)
     return null
   })
 
   fastify.post("/:id/subscriptions", { schema: routeSchema.receivers[":id"]["/subscriptions"].POST }, async (request, reply) => {
+    const receiver = await prisma.receiver.findUnique({ where: request.params })
+    if (receiver === null) {
+      throw new httpErrors.NotFound()
+    }
+    if (!ReceiverService.verifySecret(request.headers.authorization, receiver.secretSalt, receiver.editSecretHash)) {
+      throw new httpErrors.Unauthorized()
+    }
     reply.status(204)
     await ReceiverService.addPushSubscription(request.params.id, request.body)
   })
 
   fastify.post("/:id/messages", { schema: routeSchema.receivers[":id"]["/messages"].POST }, async (request, reply) => {
+    const receiver = await prisma.receiver.findUnique({ where: request.params })
+    if (receiver === null) {
+      throw new httpErrors.NotFound()
+    }
+    if (!ReceiverService.verifySecret(request.headers.authorization, receiver.secretSalt, receiver.pushSecretHash)) {
+      throw new httpErrors.Unauthorized()
+    }
     reply.status(201)
     return ReceiverService.sendMessage(request.params.id, request.body.from, request.body.content)
   })

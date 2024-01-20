@@ -34,6 +34,7 @@ export default {
     "/subscriptions": {
       POST: {
         params: UUIDParam,
+        headers: AuthenticationHeader,
         body: structures.PushSubscription,
         response: {
           "204": Type.Null()
@@ -43,6 +44,7 @@ export default {
     "/messages": {
       POST: {
         params: UUIDParam,
+        headers: AuthenticationHeader,
         body: structures.PushMessageCreate,
         response: {
           "201": structures.PushMessage
