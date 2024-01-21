@@ -38,7 +38,9 @@ const NotificationOptions = Type.Partial(Type.Object({
   body: Type.String(),
   renotify: Type.Boolean(),
   tag: Type.String(),
-  timestamp: Type.Number()
+  timestamp: Type.Number(),
+  badge: Type.String(),
+  icon: Type.String()
 }))
 
 export type NotificationT = Static<typeof Notification>
