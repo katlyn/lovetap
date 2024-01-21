@@ -4,6 +4,10 @@ import httpErrors from "http-errors";
 import {NotificationT, PushSubscriptionT} from "api-types/structures";
 import {sendNotification} from "../../config/webPush.js";
 
+function errHasStatusCode<T>(err: T): err is T & { statusCode: number } {
+  return typeof err === "object" && err !== null && "statusCode" in err && typeof err.statusCode === "number"
+}
+
 function hashSecret (secret: string, salt: string) {
   return crypto.pbkdf2Sync(secret, salt, 1000, 64, "sha512").toString("hex")
 }
@@ -75,7 +79,29 @@ export default class ReceiverService {
 
   static async notifyReceiver (receiverId: string, notification: NotificationT) {
     const subscriptions = await ReceiverService.getPushSubscriptions(receiverId)
-    return Promise.all(subscriptions.map(subscription => sendNotification(subscription, notification)))
+    const failedSubscriptions: typeof subscriptions = []
+    const subscriptionPromises = subscriptions.map(subscription => new Promise<void>(async (resolve) => {
+      try {
+        await sendNotification(subscription, notification)
+      } catch (err) {
+        if (errHasStatusCode(err) && err.statusCode === 410) {
+          // This will happen if the subscription details have been revoked or are expired. Remove the subscription so
+          // we don't try to call it in the future.
+          failedSubscriptions.push(subscription)
+        } else {
+          console.error(err)
+        }
+      }
+      resolve()
+    }))
+    if (failedSubscriptions.length > 0) {
+      await prisma.receiver.deleteMany({
+        where: {
+          OR: failedSubscriptions.map(s => ({ id: s.id }))
+        }
+      })
+    }
+    return Promise.all(subscriptionPromises)
   }
 
   static async sendMessage (receiverId: string, from: string, content?: string) {
@@ -98,7 +124,9 @@ export default class ReceiverService {
     await ReceiverService.notifyReceiver(receiverId, {
       title: `[${receiver.name}] ${from} thought of you`,
       options: {
-        body: content
+        body: content,
+        icon: "/heart-icon.png",
+        badge: "/heart-icon.png"
       }
     })
   }

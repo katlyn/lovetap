@@ -3,7 +3,6 @@ import routeSchema from "api-types/routes"
 import ReceiverService from "./ReceiverService.js";
 import prisma from "../../config/prisma.js";
 import httpErrors from "http-errors";
-import * as repl from "repl";
 
 const routes: FastifyPluginAsyncTypebox = async function (fastify): Promise<void> {
   fastify.post("/", { schema: routeSchema.receivers.POST }, async (request, reply) => {
