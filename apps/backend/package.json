@@ -7,7 +7,7 @@
     "test:watch": "pnpm test:base -w tests",
     "test:base": "DOTENV_CONFIG_PATH=example.env tap --ts --node-arg=--require=dotenv/config",
     "lint": "eslint --ext .ts src tests",
-    "start": "node ./dist/src/index.js",
+    "start": "node ./dist/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "clean": "rm -rf ./dist tsconfig.buildinfo"
