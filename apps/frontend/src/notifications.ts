@@ -20,9 +20,10 @@ export async function subscribe (receiverId: string, editSecret: string) {
   if (registration === undefined) {
     return false
   }
+  const keys = await api.keys.getKeys()
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlB64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY)
+    applicationServerKey: urlB64ToUint8Array(keys.public)
   })
   // TODO: Post keys to endpoint
   return api.receiver.addSubscription(receiverId, editSecret, subscription.toJSON() as PushSubscriptionT)

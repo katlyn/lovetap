@@ -1,5 +1,7 @@
-import receivers from "./receivers.js";
+import keys from "./keys.js"
+import receivers from "./receivers.js"
 
 export default {
+  keys,
   receivers
 }
