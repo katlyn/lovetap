@@ -40,7 +40,9 @@ export default async function buildServer (opts: ServerOptions = {}) {
     return reply.sendFile("index.html")
   })
 
-  await server.register(routes)
+  await server.register(routes, {
+    prefix: "/api"
+  })
 
   return server
 }
