@@ -1,7 +1,6 @@
 FROM node:20-alpine AS base
 ENV PNPM_HOME="/pnpm" PATH="$PNPM_HOME:$PATH"
-ENV VITE_API_BASE_URL="/"
-ENV HTTP_HOST="0.0.0.0" HTTP_PORT="80"
+ENV VITE_API_BASE_URL="" HTTP_HOST="0.0.0.0" HTTP_PORT="80"
 RUN corepack enable
 COPY . /usr/src/lovetap
 WORKDIR /usr/src/lovetap
