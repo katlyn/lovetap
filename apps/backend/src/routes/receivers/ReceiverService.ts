@@ -126,7 +126,8 @@ export default class ReceiverService {
       options: {
         body: content,
         icon: "/heart-icon.png",
-        badge: "/heart-icon.png"
+        badge: "/heart-icon.png",
+        timestamp: Date.now()
       }
     })
   }
