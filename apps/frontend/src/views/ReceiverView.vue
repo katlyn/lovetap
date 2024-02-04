@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FormKitNode } from "@formkit/core"
 import type { ReceiverT } from "api-types/structures"
 import { onMounted, ref } from "vue"
 
@@ -9,6 +10,7 @@ const props = defineProps<{
   id: string
 }>()
 
+const sendingForm = ref< { node: FormKitNode }>()
 const receiver = ref<ReceiverT|null>(null)
 const keys = ref<{ pushSecret?: string, editSecret?: string }>(JSON.parse(localStorage.getItem(`receiver-keys:${props.id}`) ?? "{}"))
 const previousName = ref<string|null>(localStorage.getItem(`receiver-from:${props.id}`))
@@ -31,9 +33,11 @@ onMounted(async () => {
   }
 })
 
-async function poke ({ from }: { from: string }) {
+async function poke ({ from, content }: { from: string, content: string }) {
+  previousName.value = from
   localStorage.setItem(`receiver-from:${props.id}`, from)
-  await api.receiver.sendMessage(props.id, keys.value.pushSecret!, { from })
+  await api.receiver.sendMessage(props.id, keys.value.pushSecret!, { from, content })
+  sendingForm.value!.node.reset()
 }
 
 async function updateName ({ name }: { name: string }) {
@@ -71,6 +75,7 @@ function copyTransfer () {
       <template v-if="keys.pushSecret">
         <FormKit
           type="form"
+          ref="sendingForm"
           @submit="poke"
           :actions="false"
           :value="{ from: previousName }"
@@ -81,6 +86,12 @@ function copyTransfer () {
               type="text"
               name="from"
               placeholder="Taps will be displayed as from this name"
+              validation="required"
+            />
+            <FormKit
+              type="textarea"
+              name="content"
+              placeholder="The content to send with the tap. This is optional."
               validation="required"
             />
             <FormKit
