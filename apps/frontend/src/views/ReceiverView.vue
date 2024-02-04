@@ -92,7 +92,6 @@ function copyTransfer () {
               type="textarea"
               name="content"
               placeholder="The content to send with the tap. This is optional."
-              validation="required"
             />
             <FormKit
               type="submit"
