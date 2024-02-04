@@ -34,10 +34,9 @@ onMounted(async () => {
 })
 
 async function poke ({ from, content }: { from: string, content: string }) {
-  previousName.value = from
   localStorage.setItem(`receiver-from:${props.id}`, from)
   await api.receiver.sendMessage(props.id, keys.value.pushSecret!, { from, content })
-  sendingForm.value!.node.reset()
+  sendingForm.value!.node.reset({ from })
 }
 
 async function updateName ({ name }: { name: string }) {
